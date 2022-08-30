@@ -31,6 +31,7 @@ from lightning_app.utilities.cli_helpers import _arrow_time_callback, _format_in
 from lightning_app.utilities.cloud import _get_project
 from lightning_app.utilities.cluster_logs import _cluster_logs_reader
 from lightning_app.utilities.login import Auth
+from lightning_app.utilities.logs_socket_api import _ClusterLogsSocketAPI
 from lightning_app.utilities.network import LightningClient
 
 logger = logging.getLogger(__name__)
@@ -236,21 +237,24 @@ def cluster_logs(cluster_name: str, to_time: arrow.Arrow, from_time: arrow.Arrow
             f" Please select one of the following: [{', '.join(clusters.keys())}]"
         )
 
-    log_reader = _cluster_logs_reader(
-        client=client,
-        cluster_id=clusters[cluster_name],
-        start=from_time.int_timestamp,
-        end=to_time.int_timestamp,
-        limit=limit,
-        follow=follow,
-    )
+    try:
+        log_reader = _cluster_logs_reader(
+            logs_api_client=_ClusterLogsSocketAPI(client.api_client),
+            cluster_id=clusters[cluster_name],
+            start=from_time.int_timestamp,
+            end=to_time.int_timestamp,
+            limit=limit,
+            follow=follow,
+        )
 
-    colors = {"error": "red", "warn": "yellow", "info": "green"}
+        colors = {"error": "red", "warn": "yellow", "info": "green"}
 
-    for log_event in log_reader:
-        date = log_event.timestamp.strftime("%m/%d/%Y %H:%M:%S")
-        color = colors.get(log_event.labels.level, "green")
-        rich.print(f"[{color}]{log_event.labels.level:5}[/{color}] {date} {log_event.message.rstrip()}")
+        for log_event in log_reader:
+            date = log_event.timestamp.strftime("%m/%d/%Y %H:%M:%S")
+            color = colors.get(log_event.labels.level, "green")
+            rich.print(f"[{color}]{log_event.labels.level:5}[/{color}] {date} {log_event.message.rstrip()}")
+    except Exception as error:
+        logger.error(f"⚡ Error while reading logs ({type(error)}), {error}")
 
 
 @_main.command()

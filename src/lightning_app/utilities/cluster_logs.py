@@ -1,9 +1,8 @@
-import dataclasses
 import json
 import queue
 from dataclasses import dataclass
 from threading import Thread
-from typing import Callable, Iterator, List, Optional
+from typing import Callable, Iterator, List
 
 import dateutil.parser
 from websocket import WebSocketApp

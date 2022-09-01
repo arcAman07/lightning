@@ -8,31 +8,17 @@ from typing import Callable, Iterator, List, Optional
 import dateutil.parser
 from websocket import WebSocketApp
 
-from lightning_app.utilities.log_helpers import _error_callback, _OrderedLogEntry
+from lightning_app.utilities.log_helpers import _OrderedLogEntry
 from lightning_app.utilities.logs_socket_api import _ClusterLogsSocketAPI
-from lightning_app.utilities.network import LightningClient
+from pytorch_lightning.utilities import AttributeDict
 
 
-class _ClusterLogEventLabels:
+class _ClusterLogEventLabels(AttributeDict):
     cluster_id: str
     grid_url: str
     hostname: str
     level: str
     logger: str
-
-    def __init__(self, **kwargs):
-        self._fields = set()
-        for k, v in kwargs.items():
-            self.__dict__[k] = v
-            self._fields.add(k)
-
-    def __eq__(self, other: "_ClusterLogEventLabels"):
-        for field in self._fields | other._fields:
-            if not hasattr(self, field) or not hasattr(other, field):
-                return False
-            if getattr(self, field) != getattr(other, field):
-                return False
-        return True
 
 
 @dataclass

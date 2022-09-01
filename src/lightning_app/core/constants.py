@@ -1,6 +1,8 @@
 import os
 from pathlib import Path
 
+import lightning_cloud.env
+
 import lightning_app
 
 SUPPORTED_PRIMITIVE_TYPES = (type(None), str, int, float, bool)
@@ -33,6 +35,8 @@ DOT_IGNORE_FILENAME = ".lightningignore"
 
 LIGHTNING_COMPONENT_PUBLIC_REGISTRY = "https://lightning.ai/v1/components"
 LIGHTNING_APPS_PUBLIC_REGISTRY = "https://lightning.ai/v1/apps"
+
+DEBUG: bool = lightning_cloud.env.DEBUG
 
 
 def get_lightning_cloud_url() -> str:

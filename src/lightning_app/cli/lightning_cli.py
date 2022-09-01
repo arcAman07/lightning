@@ -23,7 +23,7 @@ from lightning_app.cli.commands.connection import (
 from lightning_app.cli.lightning_cli_create import create
 from lightning_app.cli.lightning_cli_delete import delete
 from lightning_app.cli.lightning_cli_list import get_list
-from lightning_app.core.constants import get_lightning_cloud_url
+from lightning_app.core.constants import DEBUG, get_lightning_cloud_url
 from lightning_app.runners.runtime import dispatch
 from lightning_app.runners.runtime_type import RuntimeType
 from lightning_app.utilities.app_logs import _app_logs_reader
@@ -254,7 +254,7 @@ def cluster_logs(cluster_name: str, to_time: arrow.Arrow, from_time: arrow.Arrow
             color = colors.get(log_event.labels.level, "green")
             rich.print(f"[{color}]{log_event.labels.level:5}[/{color}] {date} {log_event.message.rstrip()}")
     except Exception as error:
-        logger.error(f"⚡ Error while reading logs ({type(error)}), {error}")
+        logger.error(f"⚡ Error while reading logs ({type(error)}), {error}", exc_info=DEBUG)
 
 
 @_main.command()

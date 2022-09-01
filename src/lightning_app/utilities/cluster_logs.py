@@ -3,7 +3,7 @@ import json
 import queue
 from dataclasses import dataclass
 from threading import Thread
-from typing import Iterator, List, Optional, Callable
+from typing import Callable, Iterator, List, Optional
 
 import dateutil.parser
 from websocket import WebSocketApp
@@ -108,6 +108,7 @@ def _cluster_logs_reader(
 
             # The socket was closed, we can just wait for thread to finish.
             log_thread.join()
+
         return stop
 
     stop_fn = start_logs(start)

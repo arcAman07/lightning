@@ -25,8 +25,7 @@ from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 from lightning_lite.utilities.apply_func import move_data_to_device
 from pytorch_lightning.core.optimizer import _init_optimizers_and_lr_schedulers, LightningOptimizer
-from pytorch_lightning.plugins import TorchCheckpointIO
-from pytorch_lightning.plugins.io.checkpoint_plugin import CheckpointIO
+from pytorch_lightning.plugins.io.torch_plugin import TorchCheckpointIO
 from pytorch_lightning.plugins.io.wrapper import _WrappingCheckpointIO
 from pytorch_lightning.plugins.precision import PrecisionPlugin
 from pytorch_lightning.strategies.launchers.base import _Launcher
@@ -54,13 +53,13 @@ class Strategy(ABC):
 
     def __init__(
         self,
-        accelerator: Optional["pl.accelerators.accelerator.Accelerator"] = None,
-        checkpoint_io: Optional[CheckpointIO] = None,
+        accelerator: Optional["pl.accelerators.Accelerator"] = None,
+        checkpoint_io: Optional["pl.plugins.CheckpointIO"] = None,
         precision_plugin: Optional[PrecisionPlugin] = None,
     ) -> None:
-        self._accelerator: Optional["pl.accelerators.accelerator.Accelerator"] = accelerator
-        self._checkpoint_io: Optional[CheckpointIO] = checkpoint_io
-        self._precision_plugin: Optional[PrecisionPlugin] = precision_plugin
+        self._accelerator = accelerator
+        self._checkpoint_io = checkpoint_io
+        self._precision_plugin = precision_plugin
         self._lightning_module: Optional[pl.LightningModule] = None
         self._model: Optional[Module] = None
         self._launcher: Optional[_Launcher] = None
@@ -74,15 +73,15 @@ class Strategy(ABC):
         return self._launcher
 
     @property
-    def accelerator(self) -> Optional["pl.accelerators.accelerator.Accelerator"]:
+    def accelerator(self) -> Optional["pl.accelerators.Accelerator"]:
         return self._accelerator
 
     @accelerator.setter
-    def accelerator(self, accelerator: "pl.accelerators.accelerator.Accelerator") -> None:
+    def accelerator(self, accelerator: "pl.accelerators.Accelerator") -> None:
         self._accelerator = accelerator
 
     @property
-    def checkpoint_io(self) -> CheckpointIO:
+    def checkpoint_io(self) -> "pl.plugins.CheckpointIO":
         if self._checkpoint_io is None:
             self._checkpoint_io = TorchCheckpointIO()
         elif isinstance(self._checkpoint_io, _WrappingCheckpointIO):
@@ -91,7 +90,7 @@ class Strategy(ABC):
         return self._checkpoint_io
 
     @checkpoint_io.setter
-    def checkpoint_io(self, io: Optional[CheckpointIO]) -> None:
+    def checkpoint_io(self, io: Optional["pl.plugins.CheckpointIO"]) -> None:
         self._checkpoint_io = io
 
     @property

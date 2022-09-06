@@ -22,12 +22,9 @@ from torch import Tensor
 from torch.nn.parallel.distributed import DistributedDataParallel
 
 import pytorch_lightning as pl
-from pytorch_lightning.utilities.imports import _HPU_AVAILABLE, _TPU_AVAILABLE
+from pytorch_lightning.utilities.imports import _HPU_AVAILABLE
 from pytorch_lightning.utilities.rank_zero import rank_zero_only  # noqa: F401
 from pytorch_lightning.utilities.rank_zero import rank_zero_debug, rank_zero_deprecation, rank_zero_info
-
-if _TPU_AVAILABLE:
-    import torch_xla.core.xla_model as xm
 
 if torch.distributed.is_available():
     from torch.distributed import group, ReduceOp
@@ -104,7 +101,9 @@ def _simple_gather_all_tensors(result: Tensor, group: Any, world_size: int) -> L
 
 
 def distributed_available() -> bool:
-    return torch.distributed.is_available() and torch.distributed.is_initialized() or tpu_distributed()
+    from pytorch_lightning.accelerators.tpu import TPUAccelerator
+
+    return torch.distributed.is_available() and torch.distributed.is_initialized() or TPUAccelerator.is_available()
 
 
 def sync_ddp_if_available(
@@ -320,7 +319,14 @@ def register_ddp_comm_hook(
 
 
 def tpu_distributed() -> bool:
-    return _TPU_AVAILABLE and xm.xrt_world_size() > 1
+    rank_zero_deprecation(
+        "`pytorch_lightning.utilities.distributed.tpu_distributed` has been deprecated in v1.8.0"
+        " and will be removed in v1.10.0. Please use `pytorch_lightning.accelerators.TPUAccelerator.is_available()`"
+        " instead."
+    )
+    from pytorch_lightning.accelerators.tpu import TPUAccelerator
+
+    return TPUAccelerator.is_available()
 
 
 def get_default_process_group_backend_for_device(device: torch.device) -> str:

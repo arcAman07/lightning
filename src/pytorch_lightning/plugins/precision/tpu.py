@@ -18,16 +18,18 @@ from torch.nn import Module
 from torch.optim import Optimizer
 
 import pytorch_lightning as pl
+from pytorch_lightning.accelerators.tpu import _XLA_AVAILABLE
 from pytorch_lightning.plugins.precision.precision_plugin import PrecisionPlugin
-from pytorch_lightning.utilities import _XLA_AVAILABLE
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
-
-if _XLA_AVAILABLE:
-    import torch_xla.core.xla_model as xm
 
 
 class TPUPrecisionPlugin(PrecisionPlugin):
     """Precision plugin for TPU integration."""
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        if not _XLA_AVAILABLE:
+            raise ModuleNotFoundError(f"Cannot instantiate the `{type(self).__name__}`: {_XLA_AVAILABLE!s}")
+        super().__init__(*args, **kwargs)
 
     def optimizer_step(
         self,
@@ -35,10 +37,12 @@ class TPUPrecisionPlugin(PrecisionPlugin):
         optimizer: Optimizer,
         optimizer_idx: int,
         closure: Callable[[], Any],
-        **kwargs: Any
+        **kwargs: Any,
     ) -> Any:
         if isinstance(model, pl.LightningModule):
             closure = partial(self._wrap_closure, model, optimizer, optimizer_idx, closure)
+        import torch_xla.core.xla_model as xm
+
         closure_result = xm.optimizer_step(optimizer, optimizer_args={"closure": closure, **kwargs})
         skipped_backward = closure_result is None
         # in manual optimization, the closure does not return a value

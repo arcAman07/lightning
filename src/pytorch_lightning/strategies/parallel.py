@@ -19,10 +19,6 @@ import torch
 from torch import Tensor
 
 import pytorch_lightning as pl
-from pytorch_lightning.plugins import LayerSync
-from pytorch_lightning.plugins.environments.cluster_environment import ClusterEnvironment
-from pytorch_lightning.plugins.io.checkpoint_plugin import CheckpointIO
-from pytorch_lightning.plugins.precision import PrecisionPlugin
 from pytorch_lightning.strategies.strategy import Strategy
 from pytorch_lightning.utilities.distributed import (
     _get_process_group_backend_from_env,
@@ -40,14 +36,14 @@ class ParallelStrategy(Strategy, ABC):
         self,
         accelerator: Optional["pl.accelerators.accelerator.Accelerator"] = None,
         parallel_devices: Optional[List[torch.device]] = None,
-        cluster_environment: Optional[ClusterEnvironment] = None,
-        checkpoint_io: Optional[CheckpointIO] = None,
-        precision_plugin: Optional[PrecisionPlugin] = None,
+        cluster_environment: Optional["pl.plugins.ClusterEnvironment"] = None,
+        checkpoint_io: Optional["pl.plugins.CheckpointIO"] = None,
+        precision_plugin: Optional["pl.plugins.PrecisionPlugin"] = None,
     ):
         super().__init__(accelerator=accelerator, checkpoint_io=checkpoint_io, precision_plugin=precision_plugin)
         self.parallel_devices = parallel_devices
         self.cluster_environment = cluster_environment
-        self._layer_sync: Optional[LayerSync] = None
+        self._layer_sync: Optional["pl.plugins.LayerSync"] = None
 
     @property
     @abstractmethod

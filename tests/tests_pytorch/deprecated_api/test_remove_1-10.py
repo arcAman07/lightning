@@ -111,6 +111,11 @@ def test_v1_10_deprecated_xla_device_utilities():
     with pytest.deprecated_call(match="xla_device.XLADeviceUtils` has been deprecated in v1.8.0"):
         XLADeviceUtils.tpu_device_exists()
 
+    from pytorch_lightning.utilities.distributed import tpu_distributed
+
+    with pytest.deprecated_call(match="tpu_distributed` has been deprecated in v1.8.0"):
+        tpu_distributed()
+
 
 def test_v1_10_deprecated_cloud_io_utilities(tmpdir):
     with pytest.deprecated_call(match="cloud_io.atomic_save` has been deprecated in v1.8.0"):

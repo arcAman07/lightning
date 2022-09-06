@@ -21,7 +21,6 @@ import __main__
 import numpy as np
 
 import pytorch_lightning as pl
-from pytorch_lightning.plugins.environments.cluster_environment import ClusterEnvironment
 from pytorch_lightning.strategies.launchers.base import _Launcher
 from pytorch_lightning.utilities.imports import _RequirementAvailable
 
@@ -70,7 +69,9 @@ class _SubprocessScriptLauncher(_Launcher):
     def is_interactive_compatible(self) -> bool:
         return False
 
-    def __init__(self, cluster_environment: ClusterEnvironment, num_processes: int, num_nodes: int) -> None:
+    def __init__(
+        self, cluster_environment: "pl.plugins.ClusterEnvironment", num_processes: int, num_nodes: int
+    ) -> None:
         super().__init__()
         self.cluster_environment = cluster_environment
         self.num_processes = num_processes

@@ -16,12 +16,10 @@ from typing import Any, Dict, Optional
 
 from lightning_lite.utilities.apply_func import apply_to_collection
 from lightning_lite.utilities.cloud_io import get_filesystem
+from pytorch_lightning.accelerators.tpu import _XLA_AVAILABLE
 from pytorch_lightning.plugins.io.torch_plugin import TorchCheckpointIO
-from pytorch_lightning.utilities import _OMEGACONF_AVAILABLE, _TPU_AVAILABLE
+from pytorch_lightning.utilities.imports import _OMEGACONF_AVAILABLE
 from pytorch_lightning.utilities.types import _PATH
-
-if _TPU_AVAILABLE:
-    import torch_xla.core.xla_model as xm
 
 if _OMEGACONF_AVAILABLE:
     from omegaconf import DictConfig, ListConfig, OmegaConf
@@ -29,6 +27,11 @@ if _OMEGACONF_AVAILABLE:
 
 class XLACheckpointIO(TorchCheckpointIO):
     """CheckpointIO that utilizes :func:`xm.save` to save checkpoints for TPU training strategies."""
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        if not _XLA_AVAILABLE:
+            raise ModuleNotFoundError(f"Cannot instantiate the `{type(self).__name__}`: {_XLA_AVAILABLE!s}")
+        super().__init__(*args, **kwargs)
 
     def save_checkpoint(self, checkpoint: Dict[str, Any], path: _PATH, storage_options: Optional[Any] = None) -> None:
         """Save model/training states as a checkpoint file through state-dump and file-write.
@@ -54,4 +57,6 @@ class XLACheckpointIO(TorchCheckpointIO):
         # Ref: https://github.com/pytorch/xla/issues/2773
         if _OMEGACONF_AVAILABLE:
             checkpoint = apply_to_collection(checkpoint, (DictConfig, ListConfig), OmegaConf.to_container)
+        import torch_xla.core.xla_model as xm
+
         xm.save({k: v for k, v in checkpoint.items() if k != "callbacks"}, path)

@@ -8,9 +8,6 @@ from torch.nn import Module
 
 import pytorch_lightning as pl
 from pytorch_lightning.overrides.base import _LightningModuleWrapperBase, _LightningPrecisionModuleWrapperBase
-from pytorch_lightning.plugins.environments.cluster_environment import ClusterEnvironment
-from pytorch_lightning.plugins.io.checkpoint_plugin import CheckpointIO
-from pytorch_lightning.plugins.precision import PrecisionPlugin
 from pytorch_lightning.strategies.ddp import DDPStrategy
 from pytorch_lightning.strategies.strategy import TBroadcast
 from pytorch_lightning.trainer.states import TrainerFn
@@ -69,11 +66,11 @@ class BaguaStrategy(DDPStrategy):
         self,
         algorithm: str = "gradient_allreduce",
         flatten: bool = True,
-        accelerator: Optional["pl.accelerators.accelerator.Accelerator"] = None,
+        accelerator: Optional["pl.Accelerator"] = None,
         parallel_devices: Optional[List[torch.device]] = None,
-        cluster_environment: Optional[ClusterEnvironment] = None,
-        checkpoint_io: Optional[CheckpointIO] = None,
-        precision_plugin: Optional[PrecisionPlugin] = None,
+        cluster_environment: Optional["pl.plugins.ClusterEnvironment"] = None,
+        checkpoint_io: Optional["pl.plugins.CheckpointIO"] = None,
+        precision_plugin: Optional["pl.plugins.PrecisionPlugin"] = None,
         **bagua_kwargs: Union[Any, Dict[str, Any]],
     ):
         """Strategy for training using the `Bagua <https://github.com/BaguaSys/bagua>`_ library, with advanced

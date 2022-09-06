@@ -30,6 +30,7 @@ from torch.optim import SGD
 from torch.optim.lr_scheduler import ReduceLROnPlateau, StepLR
 
 from pytorch_lightning import __version__, Callback, LightningDataModule, LightningModule, seed_everything, Trainer
+from pytorch_lightning.accelerators import TPUAccelerator
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 from pytorch_lightning.cli import (
     _JSONARGPARSE_SIGNATURES_AVAILABLE,
@@ -46,7 +47,6 @@ from pytorch_lightning.loggers.wandb import _WANDB_AVAILABLE
 from pytorch_lightning.plugins.environments import SLURMEnvironment
 from pytorch_lightning.strategies import DDPStrategy
 from pytorch_lightning.trainer.states import TrainerFn
-from pytorch_lightning.utilities import _TPU_AVAILABLE
 from pytorch_lightning.utilities.exceptions import MisconfigurationException
 from pytorch_lightning.utilities.imports import _TORCHVISION_AVAILABLE
 from tests_pytorch.helpers.runif import RunIf
@@ -161,7 +161,7 @@ def test_parse_args_parsing(cli_args, expected):
 
     for k, v in expected.items():
         assert getattr(args, k) == v
-    if "tpu_cores" not in expected or _TPU_AVAILABLE:
+    if "tpu_cores" not in expected or TPUAccelerator.is_available():
         assert Trainer.from_argparse_args(args)
 
 

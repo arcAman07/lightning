@@ -35,9 +35,6 @@ from pytorch_lightning.overrides import LightningDistributedModule
 from pytorch_lightning.overrides.base import _LightningPrecisionModuleWrapperBase
 from pytorch_lightning.overrides.distributed import prepare_for_backward
 from pytorch_lightning.overrides.fairscale import _FAIRSCALE_AVAILABLE
-from pytorch_lightning.plugins.environments.cluster_environment import ClusterEnvironment
-from pytorch_lightning.plugins.io.checkpoint_plugin import CheckpointIO
-from pytorch_lightning.plugins.precision import PrecisionPlugin
 from pytorch_lightning.strategies.launchers.subprocess_script import _SubprocessScriptLauncher
 from pytorch_lightning.strategies.parallel import ParallelStrategy
 from pytorch_lightning.strategies.strategy import TBroadcast
@@ -79,11 +76,11 @@ class DDPStrategy(ParallelStrategy):
 
     def __init__(
         self,
-        accelerator: Optional["pl.accelerators.accelerator.Accelerator"] = None,
+        accelerator: Optional["pl.accelerators.Accelerator"] = None,
         parallel_devices: Optional[List[torch.device]] = None,
-        cluster_environment: Optional[ClusterEnvironment] = None,
-        checkpoint_io: Optional[CheckpointIO] = None,
-        precision_plugin: Optional[PrecisionPlugin] = None,
+        cluster_environment: Optional["pl.plugins.ClusterEnvironment"] = None,
+        checkpoint_io: Optional["pl.plugins.CheckpointIO"] = None,
+        precision_plugin: Optional["pl.plugins.PrecisionPlugin"] = None,
         ddp_comm_state: Optional[object] = None,
         ddp_comm_hook: Optional[Callable] = None,
         ddp_comm_wrapper: Optional[Callable] = None,

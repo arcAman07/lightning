@@ -24,6 +24,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Added support for auto wrapping for `DDPFullyShardedStrategy` ([#14383](https://github.com/Lightning-AI/lightning/issues/14383))
 
 
+- Integrate the `lightning_utilities` package ([#14475](https://github.com/Lightning-AI/lightning/issues/14475))
+
+
 
 ### Changed
 
@@ -93,7 +96,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 
 
 
-- Deprecated the functions in `pytorch_lightning.utilities.apply_func` in favor of `lightning_lite.utilities.apply_func` ([#14516](https://github.com/Lightning-AI/lightning/pull/14516))
+- Deprecated the functions in `pytorch_lightning.utilities.apply_func` in favor of `lightning_utilities.core.apply_func` ([#14516](https://github.com/Lightning-AI/lightning/pull/14516), [#14537](https://github.com/Lightning-AI/lightning/pull/14537))
 
 
 

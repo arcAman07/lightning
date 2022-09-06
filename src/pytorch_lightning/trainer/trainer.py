@@ -586,7 +586,7 @@ class Trainer(
             self.limit_test_batches = num_batches
             self.limit_predict_batches = num_batches
             self.fit_loop.max_steps = num_batches
-            self.num_sanity_val_steps = 0
+            self.num_sanity_val_steps: Union[float, int] = 0
             self.fit_loop.max_epochs = 1
             self.val_check_interval = 1.0
             self.check_val_every_n_epoch = 1

@@ -18,10 +18,10 @@ from multiprocessing import Process, Queue
 from typing import Any, Callable, Dict, List, Optional, Union
 
 import torch
+from lightning_utilities.core.imports import RequirementCache
 
 from pytorch_lightning.accelerators.accelerator import Accelerator
 from pytorch_lightning.utilities import device_parser
-from pytorch_lightning.utilities.imports import _RequirementAvailable
 
 
 class TPUAccelerator(Accelerator):
@@ -131,7 +131,7 @@ def _is_device_tpu() -> bool:
     return (xm.xrt_world_size() > 1) or bool(xm.get_xla_supported_devices("TPU"))
 
 
-_XLA_AVAILABLE = _RequirementAvailable("torch_xla")
+_XLA_AVAILABLE = RequirementCache("torch_xla")
 
 
 def xla_available() -> bool:

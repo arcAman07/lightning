@@ -78,11 +78,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/).
 - Deprecated the `pl.core.mixins.DeviceDtypeModuleMixin` in favor of `lightning_lite.utilities.DeviceDtypeModuleMixin` ([#14511](https://github.com/Lightning-AI/lightning/pull/14511))
 
 
-- Deprecated all functions in `pytorch_lightning.utilities.xla_device` ([#14514](https://github.com/Lightning-AI/lightning/pull/14514))
+- Deprecated all functions in `pytorch_lightning.utilities.xla_device` ([#14514](https://github.com/Lightning-AI/lightning/pull/14514), [#TODO](https://github.com/Lightning-AI/lightning/pull/TODO))
   * Deprecated the internal `inner_f` function
   * Deprecated the internal `pl_multi_process` function
   * Deprecated the `XLADeviceUtils.xla_available` staticmethod in favor of `pytorch_lightning.accelerators.tpu.xla_available()`
   * Deprecated the `XLADeviceUtils.tpu_device_exists` staticmethod in favor of `pytorch_lightning.accelerators.TPUAccelerator.is_available()`
+
+
+- Deprecated `ytorch_lightning.utilities.distributed import tpu_distributed` in favor of `pytorch_lightning.accelerators.TPUAccelerator.is_available()` ([#TODO](https://github.com/Lightning-AI/lightning/pull/TODO))
 
 
 - Deprecated all functions in `pytorch_lightning.utilities.distributed.tpu_distributed` in favor of `TPUAccelerator.is_available` ([#TODO](https://github.com/Lightning-AI/lightning/pull/TODO))

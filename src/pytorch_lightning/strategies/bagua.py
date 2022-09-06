@@ -66,7 +66,7 @@ class BaguaStrategy(DDPStrategy):
         self,
         algorithm: str = "gradient_allreduce",
         flatten: bool = True,
-        accelerator: Optional["pl.Accelerator"] = None,
+        accelerator: Optional["pl.accelerators.Accelerator"] = None,
         parallel_devices: Optional[List[torch.device]] = None,
         cluster_environment: Optional["pl.plugins.ClusterEnvironment"] = None,
         checkpoint_io: Optional["pl.plugins.CheckpointIO"] = None,

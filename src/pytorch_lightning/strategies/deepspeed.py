@@ -106,7 +106,7 @@ class DeepSpeedStrategy(DDPStrategy):
 
     def __init__(
         self,
-        accelerator: Optional["pl.accelerators.accelerator.Accelerator"] = None,
+        accelerator: Optional["pl.accelerators.Accelerator"] = None,
         zero_optimization: bool = True,
         stage: int = 2,
         remote_device: str = "cpu",

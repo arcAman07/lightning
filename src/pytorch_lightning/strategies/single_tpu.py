@@ -32,7 +32,7 @@ class SingleTPUStrategy(SingleDeviceStrategy):
     def __init__(
         self,
         device: int,
-        accelerator: Optional["pl.accelerators.accelerator.Accelerator"] = None,
+        accelerator: Optional["pl.accelerators.Accelerator"] = None,
         checkpoint_io: Optional[CheckpointIO] = None,
         precision_plugin: Optional[PrecisionPlugin] = None,
         debug: bool = False,

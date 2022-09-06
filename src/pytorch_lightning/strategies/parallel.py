@@ -34,7 +34,7 @@ class ParallelStrategy(Strategy, ABC):
 
     def __init__(
         self,
-        accelerator: Optional["pl.accelerators.accelerator.Accelerator"] = None,
+        accelerator: Optional["pl.accelerators.Accelerator"] = None,
         parallel_devices: Optional[List[torch.device]] = None,
         cluster_environment: Optional["pl.plugins.ClusterEnvironment"] = None,
         checkpoint_io: Optional["pl.plugins.CheckpointIO"] = None,

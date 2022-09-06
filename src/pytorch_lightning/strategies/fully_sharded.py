@@ -55,7 +55,7 @@ class DDPFullyShardedStrategy(DDPStrategy):
 
     def __init__(
         self,
-        accelerator: Optional["pl.accelerators.accelerator.Accelerator"] = None,
+        accelerator: Optional["pl.accelerators.Accelerator"] = None,
         cpu_offload: bool = False,
         flatten_parameters: bool = True,
         reshard_after_forward: bool = True,

@@ -26,6 +26,9 @@ from pytorch_lightning.overrides import LightningDistributedModule, LightningPar
 from pytorch_lightning.overrides.base import unwrap_lightning_module
 from pytorch_lightning.overrides.fairscale import LightningShardedDataParallel, unwrap_lightning_module_sharded
 from pytorch_lightning.plugins.environments import LightningEnvironment
+from pytorch_lightning.plugins.io.checkpoint_plugin import CheckpointIO
+from pytorch_lightning.plugins.io.torch_plugin import TorchCheckpointIO
+from pytorch_lightning.plugins.io.xla_plugin import XLACheckpointIO
 from pytorch_lightning.strategies.bagua import LightningBaguaModule
 from pytorch_lightning.strategies.deepspeed import LightningDeepSpeedModule
 from pytorch_lightning.strategies.ipu import LightningIPUModule
@@ -250,3 +253,48 @@ def test_v1_10_deprecated_seed_utilities():
 
     with pytest.deprecated_call(match="seed.pl_worker_init_function` has been deprecated in v1.8.0"):
         pl_worker_init_function(0)
+
+
+def test_v1_10_deprecated_checkpoint_io_plugin():
+    class MyCheckpointIO(CheckpointIO):
+        def save_checkpoint(self, checkpoint, path, storage_options=None):
+            pass
+
+        def load_checkpoint(self, path, map_location=None):
+            pass
+
+        def remove_checkpoint(self, path):
+            pass
+
+    with pytest.deprecated_call(match="io.CheckpointIO` has been deprecated in v1.8.0"):
+        MyCheckpointIO()
+
+
+def test_v1_10_deprecated_torch_checkpoint_io_plugin():
+    class MyCheckpointIO(TorchCheckpointIO):
+        def save_checkpoint(self, checkpoint, path, storage_options=None):
+            pass
+
+        def load_checkpoint(self, path, map_location=None):
+            pass
+
+        def remove_checkpoint(self, path):
+            pass
+
+    with pytest.deprecated_call(match="io.TorchCheckpointIO` has been deprecated in v1.8.0"):
+        MyCheckpointIO()
+
+
+def test_v1_10_deprecated_xla_checkpoint_io_plugin():
+    class MyCheckpointIO(XLACheckpointIO):
+        def save_checkpoint(self, checkpoint, path, storage_options=None):
+            pass
+
+        def load_checkpoint(self, path, map_location=None):
+            pass
+
+        def remove_checkpoint(self, path):
+            pass
+
+    with pytest.deprecated_call(match="io.XLACheckpointIO` has been deprecated in v1.8.0"):
+        MyCheckpointIO()
